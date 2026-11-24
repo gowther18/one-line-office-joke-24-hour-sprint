@@ -23,11 +23,12 @@ MAX_CHARS = 200
 def load_joke() -> str:
     text = (HERE / "joke.txt").read_text(encoding="utf-8")
     # The file holds the joke with no trailing newline; strip one if present.
-    return text.rstrip("\n")
+    # Strip "\r" too so a CRLF-edited joke.txt still loads as one clean line.
+    return text.rstrip("\r\n")
 
 
 def gate(text: str) -> None:
-    if "\n" in text or text != text.strip():
+    if "\n" in text or "\r" in text or text != text.strip():
         sys.exit("entry text must be a single line with no edge whitespace")
     if not text.strip():
         sys.exit("entry text must not be only whitespace")
